@@ -119,10 +119,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4990905038488874211}
         m_MethodName: SendAsSelection
-        m_Mode: 2
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 2825176708023145082}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -142,7 +142,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b21d6f7c183e8db47ba6320b1c0849e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotType: all
+  slotType:
+  - any
+  item: {fileID: 0}
+  itemAmount: 0
+  iconObject: {fileID: 2825176708023145082}
+  icon: {fileID: 2018063411399778270}
 --- !u!1 &2825176708023145082
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,14 +159,13 @@ GameObject:
   - component: {fileID: 8994768417981137101}
   - component: {fileID: 5280637504150696453}
   - component: {fileID: 2018063411399778270}
-  - component: {fileID: 5711635790559357599}
   m_Layer: 5
   m_Name: icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8994768417981137101
 RectTransform:
   m_ObjectHideFlags: 0
@@ -218,20 +222,6 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
---- !u!114 &5711635790559357599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2825176708023145082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b27cfe63d8863146b6fb059342933b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentItem: {fileID: 0}
-  itemAmount: 0
 --- !u!1 &5028797153021592376
 GameObject:
   m_ObjectHideFlags: 0

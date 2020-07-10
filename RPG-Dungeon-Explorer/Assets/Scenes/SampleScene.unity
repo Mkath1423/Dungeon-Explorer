@@ -249,7 +249,7 @@ PrefabInstance:
     - target: {fileID: 4990905038488874211, guid: 65b29829e7476624e9a43381550bbf12,
         type: 3}
       propertyPath: itemAmount
-      value: 1
+      value: 67
       objectReference: {fileID: 0}
     - target: {fileID: 4990905038488874211, guid: 65b29829e7476624e9a43381550bbf12,
         type: 3}
@@ -261,6 +261,17 @@ PrefabInstance:
       propertyPath: slotType.Array.data[0]
       value: any
       objectReference: {fileID: 0}
+    - target: {fileID: 4990905038488874211, guid: 65b29829e7476624e9a43381550bbf12,
+        type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: e642dd621a8eb99408995fbab1c03461,
+        type: 2}
+    - target: {fileID: 4990905038488874211, guid: 65b29829e7476624e9a43381550bbf12,
+        type: 3}
+      propertyPath: icon
+      value: 
+      objectReference: {fileID: 772188059}
     - target: {fileID: 5711635790559357599, guid: 65b29829e7476624e9a43381550bbf12,
         type: 3}
       propertyPath: currentItem
@@ -271,6 +282,11 @@ PrefabInstance:
         type: 3}
       propertyPath: itemAmount
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2825176708023145082, guid: 65b29829e7476624e9a43381550bbf12,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65b29829e7476624e9a43381550bbf12, type: 3}
@@ -773,6 +789,18 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 2
+--- !u!114 &772188059 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2018063411399778270, guid: 65b29829e7476624e9a43381550bbf12,
+    type: 3}
+  m_PrefabInstance: {fileID: 86650361}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1040397398 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3379520606519734376, guid: 65b29829e7476624e9a43381550bbf12,
@@ -1011,10 +1039,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1a9ebf0f8789f45bec93b2c85131f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstSelection: {fileID: 0}
-  secondSelection: {fileID: 0}
-  firstSelectionStorage: {fileID: 0}
-  secondSelectionStorage: {fileID: 0}
+  slot1: {fileID: 0}
+  slot2: {fileID: 0}
 --- !u!1 &1121520704
 GameObject:
   m_ObjectHideFlags: 0
@@ -2009,47 +2035,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4990905038488874211, guid: 65b29829e7476624e9a43381550bbf12,
         type: 3}
-      propertyPath: slotType.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4990905038488874211, guid: 65b29829e7476624e9a43381550bbf12,
-        type: 3}
-      propertyPath: currentItem
-      value: 
-      objectReference: {fileID: 11400000, guid: 547b7b473517c6143adca2cb40684ece,
-        type: 2}
-    - target: {fileID: 4990905038488874211, guid: 65b29829e7476624e9a43381550bbf12,
-        type: 3}
-      propertyPath: itemAmount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4990905038488874211, guid: 65b29829e7476624e9a43381550bbf12,
-        type: 3}
-      propertyPath: slotType
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4990905038488874211, guid: 65b29829e7476624e9a43381550bbf12,
-        type: 3}
-      propertyPath: slotType.Array.data[0]
-      value: any
-      objectReference: {fileID: 0}
-    - target: {fileID: 5711635790559357599, guid: 65b29829e7476624e9a43381550bbf12,
-        type: 3}
-      propertyPath: currentItem
+      propertyPath: item
       value: 
       objectReference: {fileID: 11400000, guid: e642dd621a8eb99408995fbab1c03461,
         type: 2}
-    - target: {fileID: 5711635790559357599, guid: 65b29829e7476624e9a43381550bbf12,
+    - target: {fileID: 4990905038488874211, guid: 65b29829e7476624e9a43381550bbf12,
         type: 3}
       propertyPath: itemAmount
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 2018063411399778270, guid: 65b29829e7476624e9a43381550bbf12,
+    - target: {fileID: 4990905038488874211, guid: 65b29829e7476624e9a43381550bbf12,
         type: 3}
-      propertyPath: m_Sprite
+      propertyPath: icon
       value: 
-      objectReference: {fileID: 21300000, guid: 71687af64e2aee7438e47a1cb43de25e,
+      objectReference: {fileID: 1965077719}
+    - target: {fileID: 2825176708023145082, guid: 65b29829e7476624e9a43381550bbf12,
         type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65b29829e7476624e9a43381550bbf12, type: 3}
 --- !u!1001 &1781454939
@@ -2302,6 +2306,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65b29829e7476624e9a43381550bbf12, type: 3}
+--- !u!114 &1965077719 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2018063411399778270, guid: 65b29829e7476624e9a43381550bbf12,
+    type: 3}
+  m_PrefabInstance: {fileID: 1726184876}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2013665224 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3379520606519734376, guid: 65b29829e7476624e9a43381550bbf12,

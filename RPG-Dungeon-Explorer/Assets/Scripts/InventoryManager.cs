@@ -4,75 +4,63 @@ using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
-    public GameObject firstSelection, secondSelection;
-    public ItemStorage firstSelectionStorage, secondSelectionStorage;
+    public SlotManager slot1, slot2;
+
 
     private void Update()
     {
         // if we selected both items
-        if (firstSelection != null && secondSelection != null)
+        if (slot1 != null && slot2 != null)
         {
-            // if one of the slots is empty
-            if(firstSelectionStorage.currentItem == null || secondSelectionStorage == null)
-            {
-                // switch the items over
-                // then clear selection
-                SwitchSelection();
 
-            }
-            else
+            switch (MoveType())
             {
-                //if the items are the same
-                if (firstSelectionStorage.currentItem == secondSelectionStorage.currentItem)
-                {
-                    // if these Items can be stacked
-                    
-                    firstSelectionStorage.itemTags.TryGetValue("stackable", out dynamic isStackable);
-                    if (isStackable == true)
-                    {
-                        // get their max stack value and combine the items  
-                        // then clear the selection
-                        firstSelectionStorage.itemTags.TryGetValue("maxStackable", out dynamic maxStackable);
-                        CombineSelection(maxStackable);
-                    }
-                    // if these items cannot be stacked
-                    else
-                    {
-                        // clear the selection (do nothing)
-                        ClearSelection();
-                    }
-                }
-                else
-                {
-                    // if the items are not the same 
-                    //switch their sprites and stored data
-                    // then clear the selection
-                    SwitchSelection();
-                }
+                case "swap":
+                    SwapSelection();
+                    break;
+
+                case "combine":
+                    CombineSelection(slot1.item.tags["maxStackable"]);
+                    break;
+
+                case "nothing":
+                    break;
             }
-            
+           
         }
     }
     
+    public string MoveType()
+    {
+        if(slot1.item == null || slot2.item == null)
+        {
+            return "swap";
+        }
+        else if (slot1.item.itemName == slot2.item.itemName)
+        {
+            slot1.item.tags.TryGetValue("stackable", out dynamic isStackable);
+            if (isStackable) return "combine";
+            else return "nothing";
+
+        }
+        else return "swap";        
+    }
 
 
-
-    public void StoreSelection(GameObject slot)
+    public void StoreSelection(SlotManager slot)
     {
         // if we have not already stored a slection
-        if (firstSelection == null)
+        if (slot1 == null)
         {
             // store the GameObject and ItemStorage script in the first selection
-            firstSelection = slot;
-            firstSelectionStorage = slot.GetComponent<ItemStorage>();
+            slot1 = slot;
 
         }
         // if we have already stored a slection
         else
         {
             // store the GameObject and ItemStorage script in the second selection
-            secondSelection = slot;
-            secondSelectionStorage = slot.GetComponent<ItemStorage>();
+            slot2 = slot;
         }
 
         Debug.Log("selection stored");
@@ -81,11 +69,8 @@ public class InventoryManager : MonoBehaviour
     public void ClearSelection()
     {
         // clear out both selections (used after switching or combing them)
-        firstSelection = null;
-        firstSelectionStorage = null;
-
-        secondSelection = null;
-        secondSelectionStorage = null;
+        slot1 = null;
+        slot2 = null;
 
         Debug.Log("selection cleared");
     }
@@ -94,14 +79,14 @@ public class InventoryManager : MonoBehaviour
     {
         bool valid = false;
 
-        string[] firstSlotTypes = firstSelection.GetComponentInParent<SlotManager>().slotType;
-        string[] secondSlotTypes = secondSelection.GetComponentInParent<SlotManager>().slotType;
+        string[] slot1Types = slot1.slotType;
+        string[] slot2Types = slot2.slotType;
 
-        //(firstSelectionStorage.itemTags["itemType"] == secondSlotType || secondSlotType == "any") && (secondSelectionStorage.itemTags["itemType"] == firstSlotType || firstSlotType == "any")
+        
 
-        foreach(string item in firstSlotTypes)
+        foreach(string tag in slot1Types)
         {
-            if(item == "any" || secondSelectionStorage.itemTags["itemType"] == item)
+            if(tag == "any" || slot2.item.tags["itemType"] == tag)
             {
                 valid = true;
                 break;
@@ -112,9 +97,9 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        foreach (string item in secondSlotTypes)
+        foreach (string tag in slot2Types)
         {
-            if (item == "any" || firstSelectionStorage.itemTags["itemType"] == item)
+            if (tag == "any" || slot1.item.tags["itemType"] == tag)
             {
                 valid = true;
                 break;
@@ -135,16 +120,14 @@ public class InventoryManager : MonoBehaviour
 
         if (ValidateMove())
         {
-            Debug.Log(max);
             // if the selections will not combine to over their max stack value
-            if (secondSelectionStorage.itemAmount + firstSelectionStorage.itemAmount <= max)
+            if (slot1.itemAmount + slot2.itemAmount <= max)
             {
                 Debug.Log("Not too many items");
                 // add the amounts to second selection then clear the data and sprite of the first selection 
-                secondSelectionStorage.itemAmount += firstSelectionStorage.itemAmount;
+                slot2.itemAmount += slot1.itemAmount;
 
-                firstSelection.GetComponent<Image>().sprite = null;
-                firstSelectionStorage.ClearData();
+                slot1.ClearSlot();
             }
 
             // if the amount will combine to over their max stack value
@@ -153,8 +136,8 @@ public class InventoryManager : MonoBehaviour
                 Debug.Log("too many items");
 
                 // set the second selection amount to the max and subtract the right amount from the first selection
-                firstSelectionStorage.itemAmount = max - secondSelectionStorage.itemAmount;
-                secondSelectionStorage.itemAmount = max;
+                slot1.itemAmount = max - slot2.itemAmount;
+                slot2.itemAmount = max;
 
             }
         }
@@ -162,28 +145,26 @@ public class InventoryManager : MonoBehaviour
         ClearSelection();
     }
 
-    public void SwitchSelection()
+    public void SwapSelection()
     {
-
-       
         // if the item type matches the slot type or the slot can have anything
         if (ValidateMove())
         {
+            Item tempItem = slot1.item;
+            int tempAmount = slot1.itemAmount;
 
-            // switch the sprites and data of both selections
-            Sprite icon1 = firstSelection.GetComponent<Image>().sprite;
-            Sprite icon2 = secondSelection.GetComponent<Image>().sprite;
+            bool isSlot1Empty = true, isSlot2Empty = true;
 
-            firstSelection.GetComponent<Image>().sprite = icon2;
-            secondSelection.GetComponent<Image>().sprite = icon1;
+            if (slot1.item != null) isSlot1Empty = false;
+            if (slot2.item != null) isSlot2Empty = false;
 
-            Item tempItem = secondSelectionStorage.currentItem;
-            int tempAmount = secondSelectionStorage.itemAmount;
 
-            Dictionary<string, dynamic> tempTags = secondSelectionStorage.itemTags;
+            if (!isSlot2Empty) slot1.AddItem(slot2.item, slot2.itemAmount);
+            else slot1.ClearSlot();
 
-            secondSelectionStorage.SetData(firstSelectionStorage.currentItem, firstSelectionStorage.itemAmount, firstSelectionStorage.itemTags);
-            firstSelectionStorage.SetData(tempItem, tempAmount, tempTags);
+            if (!isSlot1Empty) slot2.AddItem(tempItem, tempAmount);
+            else slot2.ClearSlot();
+
 
             Debug.Log("selection swaped");
         }
