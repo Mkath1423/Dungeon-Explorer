@@ -10,10 +10,11 @@ public class SlotManager : MonoBehaviour
     public int itemAmount;
 
     public GameObject iconObject;
-    public Image icon;
+    private Image icon;
 
     private void Start()
     {
+        icon = iconObject.GetComponent<Image>();
 
         if (item == null)
         {

@@ -6,14 +6,13 @@ public class CameraFollow : MonoBehaviour
 {
 
 
-    [SerializeField]
-    private Rigidbody2D cam, player;
+    public Rigidbody2D cam, player;
 
 
-    public BoxCollider2D playerCollider;
+    public Collider2D playerCollider;
 
-    [SerializeField]
-    private float speed, bufferTimeDefault, bufferTime;
+
+    public float speed, bufferTimeDefault, bufferTime;
 
     public bool startBuffer = false, standingStill = true, bufferOver = false, inTrigger = true;
     private Vector2 direction;
@@ -30,11 +29,11 @@ public class CameraFollow : MonoBehaviour
 
     void Update()
     {
-        direction = this.transform.position - player.transform.position;
+        direction = cam.position - player..position;
         direction *= speed;
     }
 
-    private void OnTriggerStay2D(Collider2D playerCollide)
+    private void OnTriggerStay2D(Collider2D playerCollider)
     {
         inTrigger = true;
     }
