@@ -6,6 +6,13 @@ public class InventoryManager : MonoBehaviour
 {
     public SlotManager slot1, slot2;
 
+    public SlotManager[] slots;
+
+    private void Start()
+    {
+        slots = gameObject.GetComponentsInChildren<SlotManager>();
+        Debug.Log("found" + slots.Length + "slots");
+    }
 
     private void Update()
     {
@@ -29,23 +36,6 @@ public class InventoryManager : MonoBehaviour
            
         }
     }
-    
-    public string MoveType()
-    {
-        if(slot1.item == null || slot2.item == null)
-        {
-            return "swap";
-        }
-        else if (slot1.item.itemName == slot2.item.itemName)
-        {
-            slot1.item.tags.TryGetValue("stackable", out dynamic isStackable);
-            if (isStackable) return "combine";
-            else return "nothing";
-
-        }
-        else return "swap";        
-    }
-
 
     public void StoreSelection(SlotManager slot)
     {
@@ -82,11 +72,11 @@ public class InventoryManager : MonoBehaviour
         string[] slot1Types = slot1.slotType;
         string[] slot2Types = slot2.slotType;
 
-        
 
-        foreach(string tag in slot1Types)
+
+        foreach (string tag in slot1Types)
         {
-            if(tag == "any" || slot2.item.tags["itemType"] == tag)
+            if (tag == "any" || slot2.item.tags["itemType"] == tag)
             {
                 valid = true;
                 break;
@@ -114,6 +104,21 @@ public class InventoryManager : MonoBehaviour
         return valid;
     }
 
+    public string MoveType()
+    {
+        if (slot1.item == null || slot2.item == null)
+        {
+            return "swap";
+        }
+        else if (slot1.item.itemName == slot2.item.itemName)
+        {
+            slot1.item.tags.TryGetValue("stackable", out dynamic isStackable);
+            if (isStackable) return "combine";
+            else return "nothing";
+
+        }
+        else return "swap";
+    }
 
     public void CombineSelection(int max)
     {
@@ -126,11 +131,16 @@ public class InventoryManager : MonoBehaviour
                 Debug.Log("Not too many items");
                 // add the amounts to second selection then clear the data and sprite of the first selection 
                 slot2.itemAmount += slot1.itemAmount;
-
+                slot1.itemAmount = 0;
                 slot1.ClearSlot();
             }
 
             // if the amount will combine to over their max stack value
+            else if(slot1.itemAmount == max || slot2.itemAmount == max)
+            {
+                SwapSelection();
+            }
+
             else
             {
                 Debug.Log("too many items");
@@ -172,5 +182,102 @@ public class InventoryManager : MonoBehaviour
         ClearSelection();
     }
 
-    
+    public void AddItem(Item newItem, int newItemAmount)
+    {
+        
+        string newItemName = newItem.itemName;
+        newItem.tags.TryGetValue("stackable", out dynamic isStackable);
+
+        if(isStackable == null)
+        {
+            Debug.Log("error");
+            return;
+        }
+
+        if (isStackable)
+        {
+            List<int> combinableSlots = FindCombinableSlots(newItem);
+
+            if(combinableSlots.Count != 0)
+            {
+                int amountToAdd = newItemAmount;
+                for (int i = 0; i < combinableSlots.Count; i++)
+                {
+
+                    Debug.Log(amountToAdd);
+                    int max = newItem.tags["maxStackable"];
+
+
+                    if (slots[i].itemAmount == max)
+                    {
+                        continue;
+                    }
+
+                    if(slots[combinableSlots[i]].itemAmount + amountToAdd <= max)
+                    {
+                        slots[combinableSlots[i]].itemAmount += amountToAdd;
+                        amountToAdd = 0;
+                    }
+                    else
+                    {
+                        amountToAdd -= max - slots[combinableSlots[i]].itemAmount;
+                        slots[combinableSlots[i]].itemAmount = max;
+                    }
+
+                    if (amountToAdd == 0) return;
+                }
+
+                int targetSlot = FindOpenSlot();
+                slots[targetSlot].StoreItem(newItem, amountToAdd);
+                slots[targetSlot].ReloadGraphics(true);
+            }
+            else
+            {
+                int targetSlot = FindOpenSlot();
+                slots[targetSlot].StoreItem(newItem, newItemAmount);
+                slots[targetSlot].ReloadGraphics(true);
+            }
+        }
+        else
+        {
+            int targetSlot = FindOpenSlot();
+            slots[targetSlot].StoreItem(newItem, newItemAmount);
+            slots[targetSlot].ReloadGraphics(true);
+        }
+    }
+
+    public int FindOpenSlot()
+    {
+        int openSlot = -1;
+
+        for (int i = 0; i < slots.Length - 1; i++)
+        {
+
+            if (slots[i].item == null)
+            {
+                if (openSlot == -1) openSlot = i;
+            }
+            
+        }
+
+        return openSlot;
+    }
+
+    public List<int> FindCombinableSlots(Item newItem)
+    {
+        List<int> combinableSlots = new List<int>();
+
+        for (int i = 0; i < slots.Length - 1; i++)
+        {
+            if (slots[i].item == null) continue;
+            if (slots[i].item.itemName == newItem.itemName)
+            {
+                combinableSlots.Add(i);
+            }
+
+        }
+
+        return combinableSlots;
+    }
+
 }

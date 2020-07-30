@@ -18,21 +18,41 @@ public class SlotManager : MonoBehaviour
 
         if (item == null)
         {
-            Debug.Log("no item");
-
             icon.sprite = null;
             iconObject.SetActive(false);
      
         }
         else
         {
-            Debug.Log("item"); 
-            icon.sprite = item.sprite;
-            iconObject.SetActive(true);
-
+            ReloadGraphics(true);
         }
     }
 
+    public void ReloadGraphics(bool isActive)
+    { 
+        icon.sprite = item.sprite;
+        iconObject.SetActive(isActive);
+    }
+
+    public void StoreItem(Item newItem, int newItemAmount)
+    {
+        item = newItem;
+        itemAmount = newItemAmount;
+    }
+
+    public void StoreItem(int newItemAmount)
+    {
+        itemAmount += newItemAmount;
+
+    }
+
+    public void ClearSlot()
+    {
+        item = null;
+
+        icon.sprite = null;
+        iconObject.SetActive(false);
+    }
 
     public void SendAsSelection()
     {
@@ -46,17 +66,10 @@ public class SlotManager : MonoBehaviour
 
 
         iconObject.SetActive(true);
-        Debug.Log(item.sprite);
         icon.sprite = item.sprite;
         
     }
     
-    public void ClearSlot()
-    {
-        item = null;
 
-        icon.sprite = null;
-        iconObject.SetActive(false);
-    }
 
 }

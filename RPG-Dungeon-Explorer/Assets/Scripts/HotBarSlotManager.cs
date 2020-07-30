@@ -11,6 +11,10 @@ public class HotBarSlotManager : MonoBehaviour
     public Image icon;
     public GameObject iconObject;
 
+    public Color defaultColor;
+    public Color selectedColor;
+    private bool isSelected = false;
+
     private void Start()
     {
         if (linkedSlot.item == null)
@@ -49,6 +53,20 @@ public class HotBarSlotManager : MonoBehaviour
                 icon.sprite = item.sprite;
                 iconObject.SetActive(true);
             }
+        }
+    }
+
+    public void ChangeColor()
+    {
+        if (isSelected)
+        {
+            isSelected = false;
+            gameObject.GetComponent<Image>().color = defaultColor;
+        }
+        else
+        {
+            isSelected = true;
+            gameObject.GetComponent<Image>().color = selectedColor;
         }
     }
 }

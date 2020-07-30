@@ -2,46 +2,73 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerControler : MonoBehaviour
+public class PlayerControler : Entities
 {
-    public float speed;
-
     public Rigidbody2D rb;
     private Vector2 moveVelocity;
 
     public Item heldItem;
+    public GameObject weaponDrawPoint;
 
     public GameObject inventory;
     public GameObject hotBar;
 
     public GameObject hotBarParent;
-    private HotBarSlotManager[] hotBarSlots;
+    public HotBarSlotManager[] hotBarSlots;
     private float selectedSlot = 0;
 
     private bool isInventoryOpen;
 
+    public Item itemToAdd;
+
     private void Start()
     {
+
         hotBarSlots = hotBarParent.GetComponentsInChildren<HotBarSlotManager>();
+
         heldItem = hotBarSlots[0].item;
+        hotBarSlots[0].ChangeColor();
+
         isInventoryOpen = false;
+        inventory.SetActive(false);
+
+        inventory.GetComponent<InventoryManager>().AddItem(itemToAdd, 1);
     }
 
     void Update()
     {
+
+        // calculate move vector
         Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         moveVelocity = moveInput.normalized * speed;
 
-        if(Input.GetAxisRaw("Mouse ScrollWheel") != 0)
+        // make the player face the correc direction
+        if (moveInput.x == 1) transform.localScale = new Vector2(1, 1);
+        if (moveInput.x == -1) transform.localScale = new Vector2(-1, 1);
+
+        // intanciate the held item spriteobject as a child of player
+
+        heldItem = hotBarSlots[(int)selectedSlot].item;
+        if (heldItem != null) weaponDrawPoint.GetComponent<SpriteRenderer>().sprite = heldItem.sprite;
+        else weaponDrawPoint.GetComponent<SpriteRenderer>().sprite = null;
+
+        // Call the use method of the item when mounse button 0 is pressed
+        if (Input.GetMouseButtonDown(0) && !isInventoryOpen && heldItem != null) heldItem.Use(weaponDrawPoint, 0f);
+
+
+        // switch the held item whent the scroll wheel in moved
+        if (Input.GetAxisRaw("Mouse ScrollWheel") != 0)
         {
+            hotBarSlots[(int)selectedSlot].ChangeColor();
+
             if (selectedSlot == 0 && Input.GetAxisRaw("Mouse ScrollWheel") < 0) selectedSlot = 6;
             else if (selectedSlot == 6 && Input.GetAxisRaw("Mouse ScrollWheel") > 0) selectedSlot = 0;
             else selectedSlot += Input.GetAxisRaw("Mouse ScrollWheel");
 
-            heldItem = hotBarSlots[(int) selectedSlot].item;
-            Debug.Log(Input.GetAxisRaw("Mouse ScrollWheel"));
+            hotBarSlots[(int)selectedSlot].ChangeColor();
         }
 
+        // open the inventory when e is pressed
         if (Input.GetKeyDown(KeyCode.E))
         {
             ToggleGameobject(inventory);
@@ -52,18 +79,15 @@ public class PlayerControler : MonoBehaviour
         else isInventoryOpen = false;
     }
 
+    void FixedUpdate()
+    {
+        // if the inventory is not open then move the player based on the previous calculations
+        if (!isInventoryOpen) rb.velocity = new Vector2(moveVelocity.x, moveVelocity.y);
+    }
+
     void ToggleGameobject(GameObject target)
     {
         if (target.activeSelf == true) target.SetActive(false);
         else target.SetActive(true);
- 
-    }
-
-
-
-    void FixedUpdate()
-    {
-        if(!isInventoryOpen) rb.velocity = new Vector2(moveVelocity.x, moveVelocity.y);
-
     }
 }

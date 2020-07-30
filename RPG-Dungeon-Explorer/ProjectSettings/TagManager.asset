@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - weaponPoint
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - 
   - GroundTiles
   - ObjectTiles
-  - 
+  - Attacks
   - 
   - 
   - 
@@ -40,4 +41,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: groundTiles
+    uniqueID: 3104397015
+    locked: 0
+  - name: objectTiles
+    uniqueID: 2596336579
+    locked: 0
+  - name: player
+    uniqueID: 2907501791
+    locked: 0
+  - name: attack
+    uniqueID: 2718979851
+    locked: 0
+  - name: UI
+    uniqueID: 2092923377
     locked: 0
