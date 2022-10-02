@@ -59,11 +59,20 @@ public class PlayerControler : Entities
         // switch the held item whent the scroll wheel in moved
         if (Input.GetAxisRaw("Mouse ScrollWheel") != 0)
         {
+            float mouseScrollAmount = Input.GetAxisRaw("Mouse ScrollWheel");
             hotBarSlots[(int)selectedSlot].ChangeColor();
 
-            if (selectedSlot == 0 && Input.GetAxisRaw("Mouse ScrollWheel") < 0) selectedSlot = 6;
-            else if (selectedSlot == 6 && Input.GetAxisRaw("Mouse ScrollWheel") > 0) selectedSlot = 0;
-            else selectedSlot += Input.GetAxisRaw("Mouse ScrollWheel");
+            if (mouseScrollAmount > 0)
+            {
+                if (selectedSlot == 6) selectedSlot = 0;
+                else selectedSlot += 1;
+            }
+
+            else if(mouseScrollAmount < 0)
+            {
+                if (selectedSlot == 0) selectedSlot = 6;
+                else selectedSlot -= 1;
+            }
 
             hotBarSlots[(int)selectedSlot].ChangeColor();
         }
